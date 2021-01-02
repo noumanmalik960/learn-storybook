@@ -9,6 +9,7 @@ export default {
 
 const Template = (args) => <Task {...args} />;
 
+
 // Template.bind({}) is a standard JS technique for making a copy of a function.
 export const Default = Template.bind({});
 Default.args = {
