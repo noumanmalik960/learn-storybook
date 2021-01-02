@@ -1,8 +1,11 @@
 import React from "react";
 import Task from "./Task";
 import PropTypes from "prop-types";
+// redux related imports
+import { connect } from "react-redux";
+import { archiveTask, pinTask } from "../lib/redux";
 
-export default function TaskList({ loading, tasks, onPinTask, onArchiveTask }) {
+export function PureTaskList({ loading, tasks, onPinTask, onArchiveTask }) {
   const events = {
     onPinTask,
     onArchiveTask,
@@ -52,12 +55,27 @@ export default function TaskList({ loading, tasks, onPinTask, onArchiveTask }) {
   );
 }
 
-TaskList.propTypes = {
+// even if we don't use TS or Flow we can use React's built-in typechecking abilities and we can do it through prop-types. on invalid value it shows a warning on the console. for more info go to `https://reactjs.org/docs/typechecking-with-proptypes.html`
+PureTaskList.propTypes = {
   loading: PropTypes.bool,
   tasks: PropTypes.arrayOf(Task.propTypes.task).isRequired,
-  onPinTask: PropTypes.func,
-  onArchiveTask: PropTypes.func,
+  onPinTask: PropTypes.func.isRequired,
+  onArchiveTask: PropTypes.func.isRequired,
 };
-TaskList.defaultPropps = {
+PureTaskList.defaultProps = {
   loading: false,
 };
+
+// The connect() function is from react-redux and it connects a React component to a Redux store.
+
+export default connect(
+  ({ tasks }) => ({
+    tasks: tasks.filter(
+      (t) => t.state === "TASK_INBOX" || t.state === "TASK_PINNED"
+    ),
+  }),
+  (dispatch) => ({
+    onArchiveTask: (id) => dispatch(archiveTask(id)),
+    onPinTask: (id) => dispatch(pinTask(id)),
+  })
+)(PureTaskList);

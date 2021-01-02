@@ -1,14 +1,17 @@
 import React from 'react'
-import TaskList from './TaskList'
 import * as TaskStories from './Task.stories'
+import { PureTaskList } from './TaskList'
 
+
+// NOTE: when we run `yarn test` with --watchAll flag it means "watch files for changes and rerun all tests when something changes"
 export default {
   title: 'TaskList',
-  component: TaskList,
+  component: PureTaskList,
+  // through decorators we can give styling to the stories we will render in this file
   decorators: [story => <div style={{ padding: '3rem' }}>{story()}</div>]
 }
 
-const Template = args => <TaskList {...args} />
+const Template = args => <PureTaskList {...args} />
 
 export const Default = Template.bind({})
 Default.args = {
